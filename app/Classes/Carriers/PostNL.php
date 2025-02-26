@@ -3,6 +3,7 @@
 namespace App\Classes\Carriers;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class PostNL implements Carrier
 {
@@ -18,6 +19,12 @@ class PostNL implements Carrier
     {
         return $this->name;
     }
+
+    public function getIcon()
+    {
+        return asset('images/icons/' . strtolower($this->name) . '-marker.png');
+    }
+
     public function authenticate()
     {
         return Http::withHeaders([
@@ -28,11 +35,26 @@ class PostNL implements Carrier
 
     public function locations()
     {
-        $response = $this->authenticate()->get($this->url . '/shipment/v2_1/locations/nearest', [
+        $locations = $this->authenticate()->get($this->url . '/shipment/v2_1/locations/nearest', [
             'Latitude' => config('app.default_lat'),
             'Longitude' => config('app.default_lng')
         ])->json();
 
-        return collect($response['GetLocationsResult']['ResponseLocation'])->map(fn($item) => ['lat' => $item['Latitude'], 'long' => $item['Longitude']])->toArray();
+        return collect($locations['GetLocationsResult']['ResponseLocation'])->map(fn($location) => [
+            'external_id' => $location['RetailNetworkID'],
+            'name' => $location['Name'],
+            'slug' => Str::slug($location['Name']),
+            'carrier' => $this->name,
+            'type' => $location['Address']['Remark'],
+            'street' => $location['Address']['Street'],
+            'number' => $location['Address']['HouseNr'] . trim(' ' . ($location['Address']['HouseNrExt'] ?? null)),
+            'postal_code' => $location['Address']['Zipcode'],
+            'city' => $location['Address']['City'],
+            'country' => $location['Address']['Countrycode'],
+            'telephone' => null,
+            'latitude' => $location['Latitude'],
+            'longitude' => $location['Longitude'],
+            'icon' => $this->getIcon()
+        ])->toArray();
     }
 }

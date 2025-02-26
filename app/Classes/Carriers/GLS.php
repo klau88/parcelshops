@@ -4,6 +4,7 @@ namespace App\Classes\Carriers;
 
 use App\Classes\Carriers\Carrier;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class GLS implements Carrier
 {
@@ -20,6 +21,11 @@ class GLS implements Carrier
         return $this->name;
     }
 
+    public function getIcon()
+    {
+        return asset('images/icons/' . strtolower($this->name) . '-marker.png');
+    }
+
     public function authenticate()
     {
         // TODO: Implement authenticate() method.
@@ -29,12 +35,27 @@ class GLS implements Carrier
     {
         $locations = Http::post($this->url . '/ParcelShop/GetParcelShops', [
             'countryCode' => 'NL',
-            'zipCode' => config('carriers.gls.postal'),
+            'zipCode' => config('app.default_postal'),
             'amountOfShops' => 10,
             'username' => config('carriers.gls.username'),
             'password' => config('carriers.gls.password'),
         ])->json();
 
-        return collect($locations['parcelShops'])->map(fn($item) => ['lat' => $item['geoCoordinates']['lat'], 'long' => $item['geoCoordinates']['lng']])->toArray();
+        return collect($locations['parcelShops'])->map(fn($location) => [
+            'external_id' => $location['parcelShopId'],
+            'name' => $location['name'],
+            'slug' => Str::slug($location['name']),
+            'carrier' => $this->name,
+            'type' => $location['type'],
+            'street' => $location['street'],
+            'number' => $location['houseNo'],
+            'postal_code' => $location['zipcode'],
+            'city' => $location['city'],
+            'country' => $location['countryCode'],
+            'telephone' => null,
+            'latitude' => $location['geoCoordinates']['lat'],
+            'longitude' => $location['geoCoordinates']['lng'],
+            'icon' => $this->getIcon()
+        ])->toArray();
     }
 }

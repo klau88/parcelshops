@@ -5,6 +5,12 @@ return [
     'gls' => [
         'username' => env('GLS_USERNAME'),
         'password' => env('GLS_PASSWORD'),
-        'postal' => env('DEFAULT_POSTAL'),
+    ],
+    'dhl' => [
+        'token' => env('DHL_TOKEN'),
+    ],
+    'dpd' => [
+        'delisId' => env('DPD_DELIS_ID'),
+        'password' => env('DPD_PASSWORD'),
     ]
 ];
