@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('postal_code');
             $table->string('city');
             $table->string('country');
-            $table->string('telephone');
+            $table->string('telephone')->nullable();
+            $table->string('email')->nullable();
             $table->string('latitude');
             $table->string('longitude');
             $table->timestamps();
