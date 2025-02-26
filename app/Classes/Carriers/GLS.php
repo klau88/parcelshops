@@ -55,7 +55,6 @@ class GLS implements Carrier
             'telephone' => null,
             'latitude' => $location['geoCoordinates']['lat'],
             'longitude' => $location['geoCoordinates']['lng'],
-            'icon' => $this->getIcon()
         ])->toArray();
     }
 }

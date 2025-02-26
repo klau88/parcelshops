@@ -17,6 +17,9 @@ const props = defineProps({
     carriers: {
         type: Array
     },
+    icons: {
+        type: Array
+    },
     defaultMarkerIcon: {
         type: String
     }
@@ -44,7 +47,7 @@ onMounted(() => {
         new L.Marker([location.latitude, location.longitude], {
             title: location.name,
             icon: L.icon({
-                iconUrl: location.icon
+                iconUrl: props.icons[location.type]
             })
         }).addTo(map.value).bindPopup(location.name);
     }

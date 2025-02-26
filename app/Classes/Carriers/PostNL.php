@@ -54,7 +54,6 @@ class PostNL implements Carrier
             'telephone' => null,
             'latitude' => $location['Latitude'],
             'longitude' => $location['Longitude'],
-            'icon' => $this->getIcon()
         ])->toArray();
     }
 }

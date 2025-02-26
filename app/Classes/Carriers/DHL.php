@@ -52,7 +52,6 @@ class DHL implements Carrier
             'telephone' => null,
             'latitude' => $location['geoLocation']['latitude'],
             'longitude' => $location['geoLocation']['longitude'],
-            'icon' => $this->getIcon()
         ])->toArray();
     }
 }

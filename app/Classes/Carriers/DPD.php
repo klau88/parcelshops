@@ -93,7 +93,6 @@ class DPD implements Carrier
             'email' => $location->email ?? null,
             'latitude' => $location->latitude,
             'longitude' => $location->longitude,
-            'icon' => $this->getIcon()
         ])->toArray();
     }
 }
