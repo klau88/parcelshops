@@ -7,7 +7,7 @@ use App\Classes\Carriers\DPD;
 use App\Classes\Carriers\GLS;
 use App\Classes\Carriers\PostNL;
 use App\Enums\Carrier;
-use App\Models\Parcelshops;
+use App\Models\Parcelshop;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -34,10 +34,12 @@ class ParcelshopsController extends Controller
     {
         $locations = [];
         $carriers = [];
+        $icons = [];
 
         foreach (Carrier::cases() as $case) {
             array_push($carriers, $case->name);
             $carrier = $this->selectCarrier($case->name);
+            $icons[$case->name] = $carrier->getIcon();
 
             foreach ($carrier->locations() as $location) {
                 array_push($locations, $location);
@@ -46,7 +48,7 @@ class ParcelshopsController extends Controller
 
         $defaultMarkerIcon = asset('images/icons/parcelpro-marker.png');
 
-        return Inertia::render('Parcelshops/Map', compact('locations', 'carriers', 'defaultMarkerIcon'));
+        return Inertia::render('Parcelshops/Map', compact('locations', 'carriers', 'icons', 'defaultMarkerIcon'));
     }
 
     /**
@@ -68,7 +70,7 @@ class ParcelshopsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Parcelshops $parcelshops)
+    public function show(Parcelshop $parcelshops)
     {
         //
     }
@@ -76,7 +78,7 @@ class ParcelshopsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Parcelshops $parcelshops)
+    public function edit(Parcelshop $parcelshops)
     {
         //
     }
@@ -84,7 +86,7 @@ class ParcelshopsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Parcelshops $parcelshops)
+    public function update(Request $request, Parcelshop $parcelshops)
     {
         //
     }
@@ -92,7 +94,7 @@ class ParcelshopsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Parcelshops $parcelshops)
+    public function destroy(Parcelshop $parcelshops)
     {
         //
     }
