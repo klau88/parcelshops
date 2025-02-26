@@ -123,4 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'default_lat' => env('DEFAULT_LAT'),
+    'default_lng' => env('DEFAULT_LNG'),
+    'default_postal' => env('DEFAULT_POSTAL'),
 ];
