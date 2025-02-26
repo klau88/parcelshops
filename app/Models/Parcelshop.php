@@ -14,6 +14,7 @@ class Parcelshop extends Model
         'external_id',
         'name',
         'slug',
+        'carrier',
         'type',
         'street',
         'number',
