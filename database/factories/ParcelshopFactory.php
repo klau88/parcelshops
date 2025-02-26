@@ -21,6 +21,7 @@ class ParcelshopFactory extends Factory
             'external_id' => fake()->numberBetween(1, 999999),
             'name' => fake()->sentence(),
             'slug' => fake()->slug(),
+            'carrier' => fake()->randomElement(Carrier::cases())->value,
             'type' => fake()->randomElement(Carrier::cases())->value,
             'street' => fake()->streetName(),
             'number' => fake()->buildingNumber(),
