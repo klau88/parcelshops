@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Parcelshop extends Model
 {
-    /** @use HasFactory<\Database\Factories\ParcelshopsFactory> */
+    /** @use HasFactory<\Database\Factories\ParcelshopFactory> */
     use HasFactory;
 
     protected $fillable = [
