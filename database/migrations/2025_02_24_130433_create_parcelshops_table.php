@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('external_id');
             $table->string('name');
             $table->string('slug');
+            $table->string('carrier');
             $table->string('type');
             $table->string('street');
             $table->string('number');
