@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Parcelshops extends Model
+class Parcelshop extends Model
 {
     /** @use HasFactory<\Database\Factories\ParcelshopsFactory> */
     use HasFactory;

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('parcelshops', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('external_id')->unique();
+            $table->string('external_id');
             $table->string('name');
             $table->string('slug');
             $table->string('type');

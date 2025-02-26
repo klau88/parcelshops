@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Parcelshops;
+use App\Models\Parcelshop;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -22,6 +22,6 @@ class DatabaseSeeder extends Seeder
             'password' => env('PASSWORD'),
         ]);
 
-        Parcelshops::factory()->count(10)->create();
+        Parcelshop::factory()->count(10)->create();
     }
 }
