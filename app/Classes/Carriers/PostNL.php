@@ -2,6 +2,7 @@
 
 namespace App\Classes\Carriers;
 
+use App\Models\Parcelshop;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -40,20 +41,30 @@ class PostNL implements Carrier
             'Longitude' => config('app.default_lng')
         ])->json();
 
-        return collect($locations['GetLocationsResult']['ResponseLocation'])->map(fn($location) => [
-            'external_id' => $location['RetailNetworkID'],
-            'name' => $location['Name'],
-            'slug' => Str::slug($location['Name']),
-            'carrier' => $this->name,
-            'type' => $location['Address']['Remark'],
-            'street' => $location['Address']['Street'],
-            'number' => $location['Address']['HouseNr'] . trim(' ' . ($location['Address']['HouseNrExt'] ?? null)),
-            'postal_code' => $location['Address']['Zipcode'],
-            'city' => $location['Address']['City'],
-            'country' => $location['Address']['Countrycode'],
-            'telephone' => null,
-            'latitude' => $location['Latitude'],
-            'longitude' => $location['Longitude'],
-        ])->toArray();
+        $mappedLocations = [];
+
+        foreach ($locations['GetLocationsResult']['ResponseLocation'] as $location) {
+            $mapped = [
+                'external_id' => $location['LocationCode'],
+                'name' => $location['Name'],
+                'slug' => Str::slug($location['Name']),
+                'carrier' => $this->name,
+                'type' => $this->name,
+                'street' => $location['Address']['Street'],
+                'number' => $location['Address']['HouseNr'] . trim(' ' . ($location['Address']['HouseNrExt'] ?? null)),
+                'postal_code' => $location['Address']['Zipcode'],
+                'city' => $location['Address']['City'],
+                'country' => $location['Address']['Countrycode'],
+                'telephone' => null,
+                'latitude' => $location['Latitude'],
+                'longitude' => $location['Longitude'],
+            ];
+
+            array_push($mappedLocations, $mapped);
+
+            Parcelshop::firstOrCreate($mapped);
+        }
+
+        return $mappedLocations;
     }
 }

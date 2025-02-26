@@ -47,7 +47,7 @@ onMounted(() => {
         new L.Marker([location.latitude, location.longitude], {
             title: location.name,
             icon: L.icon({
-                iconUrl: props.icons[location.type]
+                iconUrl: props.icons[location.carrier]
             })
         }).addTo(map.value).bindPopup(location.name);
     }
@@ -55,8 +55,10 @@ onMounted(() => {
 </script>
 
 <template>
-    <FormBar :carriers="carriers"/>
-    <div id="map">
+    <div class="flex">
+        <FormBar :carriers="carriers"/>
+        <div id="map">
+        </div>
     </div>
 </template>
 

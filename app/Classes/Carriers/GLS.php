@@ -3,6 +3,7 @@
 namespace App\Classes\Carriers;
 
 use App\Classes\Carriers\Carrier;
+use App\Models\Parcelshop;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -41,20 +42,30 @@ class GLS implements Carrier
             'password' => config('carriers.gls.password'),
         ])->json();
 
-        return collect($locations['parcelShops'])->map(fn($location) => [
-            'external_id' => $location['parcelShopId'],
-            'name' => $location['name'],
-            'slug' => Str::slug($location['name']),
-            'carrier' => $this->name,
-            'type' => $location['type'],
-            'street' => $location['street'],
-            'number' => $location['houseNo'],
-            'postal_code' => $location['zipcode'],
-            'city' => $location['city'],
-            'country' => $location['countryCode'],
-            'telephone' => null,
-            'latitude' => $location['geoCoordinates']['lat'],
-            'longitude' => $location['geoCoordinates']['lng'],
-        ])->toArray();
+        $mappedLocations = [];
+
+        foreach ($locations['parcelShops'] as $location) {
+            $mapped = [
+                'external_id' => $location['parcelShopId'],
+                'name' => $location['name'],
+                'slug' => Str::slug($location['name']),
+                'carrier' => $this->name,
+                'type' => $location['type'],
+                'street' => $location['street'],
+                'number' => $location['houseNo'],
+                'postal_code' => $location['zipcode'],
+                'city' => $location['city'],
+                'country' => $location['countryCode'],
+                'telephone' => null,
+                'latitude' => $location['geoCoordinates']['lat'],
+                'longitude' => $location['geoCoordinates']['lng'],
+            ];
+
+            array_push($mappedLocations, $mapped);
+
+            Parcelshop::firstOrCreate($mapped);
+        }
+
+        return $mappedLocations;
     }
 }
