@@ -6,14 +6,14 @@ use App\Models\Parcelshop;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-class GLS implements Carrier
+class Homerr implements Carrier
 {
     private $name;
-    private $url = 'https://api.gls.nl/V1/api';
+    private $url = 'https://homerr-functions-production.azurewebsites.net/api';
 
     public function __construct()
     {
-        $this->name = 'GLS';
+        $this->name = 'Homerr';
     }
 
     public function getName()
@@ -28,31 +28,30 @@ class GLS implements Carrier
 
     public function locations()
     {
-        $locations = Http::post($this->url . '/ParcelShop/GetParcelShops', [
-            'countryCode' => 'NL',
-            'zipCode' => config('app.default_postal'),
-            'amountOfShops' => 10,
-            'username' => config('carriers.gls.username'),
-            'password' => config('carriers.gls.password'),
+        $locations = Http::get($this->url . '/v1/homerrs/dropoff', [
+            'postalcode' => config('app.default_postal'),
+            'number' => config('app.default_number'),
+            'country' => 'NL',
+            'limit' => 20
         ])->json();
 
         $mappedLocations = [];
 
-        foreach ($locations['parcelShops'] as $location) {
+        foreach ($locations as $location) {
             $mapped = [
-                'external_id' => $location['parcelShopId'],
+                'external_id' => $location['id'],
                 'name' => $location['name'],
                 'slug' => Str::slug($location['name']),
                 'carrier' => $this->name,
-                'type' => $location['type'],
+                'type' => $this->name,
                 'street' => $location['street'],
-                'number' => $location['houseNo'],
-                'postal_code' => $location['zipcode'],
+                'number' => trim($location['houseNumber'] . ' ' . $location['houseAddition'] . ' ' . $location['houseLetter']),
+                'postal_code' => $location['postalCode'],
                 'city' => $location['city'],
-                'country' => $location['countryCode'],
+                'country' => $location['country'],
                 'telephone' => null,
-                'latitude' => $location['geoCoordinates']['lat'],
-                'longitude' => $location['geoCoordinates']['lng'],
+                'latitude' => $location['latitude'],
+                'longitude' => $location['longitude'],
             ];
 
             array_push($mappedLocations, $mapped);

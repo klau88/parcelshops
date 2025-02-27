@@ -47,7 +47,8 @@ onMounted(() => {
         new L.Marker([location.latitude, location.longitude], {
             title: location.name,
             icon: L.icon({
-                iconUrl: props.icons[location.carrier]
+                iconUrl: props.icons[location.carrier],
+                iconSize: [37, 51]
             })
         }).addTo(map.value).bindPopup(location.name);
     }

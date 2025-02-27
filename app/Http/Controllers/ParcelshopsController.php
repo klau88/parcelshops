@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Classes\Carriers\DHL;
 use App\Classes\Carriers\DPD;
 use App\Classes\Carriers\GLS;
+use App\Classes\Carriers\Homerr;
+use App\Classes\Carriers\Intrapost;
 use App\Classes\Carriers\PostNL;
 use App\Enums\Carrier;
 use App\Models\Parcelshop;
@@ -24,6 +26,10 @@ class ParcelshopsController extends Controller
                 return new DPD();
             case 'DHL':
                 return new DHL();
+            case 'Intrapost':
+                return new Intrapost();
+            case 'Homerr':
+                return new Homerr();
         }
     }
 
@@ -39,7 +45,7 @@ class ParcelshopsController extends Controller
         foreach (Carrier::cases() as $case) {
             array_push($carriers, $case->name);
             $carrier = $this->selectCarrier($case->name);
-            $icons[$case->name] = $carrier->getIcon();
+            $icons[$case->name] = asset('images/icons/' . strtolower($case->name) . '-marker.png');
 
             foreach ($carrier->locations() as $location) {
                 array_push($locations, $location);

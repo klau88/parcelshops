@@ -21,11 +21,6 @@ class PostNL implements Carrier
         return $this->name;
     }
 
-    public function getIcon()
-    {
-        return asset('images/icons/' . strtolower($this->name) . '-marker.png');
-    }
-
     public function authenticate()
     {
         return Http::withHeaders([
