@@ -26,13 +26,13 @@ class Homerr implements Carrier
         // TODO: Implement authenticate() method.
     }
 
-    public function locations()
+    public function locations(array $data)
     {
         $locations = Http::get($this->url . '/v1/homerrs/dropoff', [
-            'postalcode' => config('app.default_postal'),
-            'number' => config('app.default_number'),
-            'country' => 'NL',
-            'limit' => 20
+            'postalcode' => $data['postal'],
+            'number' => $data['number'],
+            'country' => $data['country'],
+            'limit' => $data['limit'],
         ])->json();
 
         $mappedLocations = [];

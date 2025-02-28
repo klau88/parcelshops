@@ -30,10 +30,10 @@ class DHL implements Carrier
         ]);
     }
 
-    public function locations()
+    public function locations(array $data)
     {
         $locations = $this->authenticate()
-            ->get($this->url . '/parcel-shop-locations/NL?postalCode=' . config('app.default_postal'))
+            ->get($this->url . '/parcel-shop-locations/NL?postalCode=' . $data['postal'] . '&limit=' . $data['limit'])
             ->json();
 
         $mappedLocations = [];

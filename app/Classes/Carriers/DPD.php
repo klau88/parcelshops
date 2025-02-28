@@ -44,7 +44,7 @@ class DPD implements Carrier
         return $authClient->getAuth($authData);
     }
 
-    public function locations()
+    public function locations(array $data)
     {
         $parcelshopClient = new SoapClient($this->url . '/ParcelShopFinderServiceV50.wsdl', [
             'stream_context' => stream_context_create([
@@ -63,14 +63,12 @@ class DPD implements Carrier
         ]);
 
         $parcelshopClient->__setSoapHeaders([$soapHeader]);
-        $lat = config('app.default_lat');
-        $lng = config('app.default_lng');
 
         $locations = $parcelshopClient->__soapCall('findParcelShopsByGeoData', [
             [
-                'longitude' => substr((string)$lng, 0, 10),
-                'latitude' => substr((string)$lat, 0, 10),
-                'limit' => 10
+                'latitude' => substr((string)$data['latitude'], 0, 10),
+                'longitude' => substr((string)$data['longitude'], 0, 10),
+                'limit' => $data['limit']
             ]
         ]);
 

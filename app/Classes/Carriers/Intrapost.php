@@ -26,16 +26,19 @@ class Intrapost implements Carrier
         return [
             'ApiKey' => config('carriers.intrapost.apiKey'),
             'AccountNumber' => config('carriers.intrapost.accountNumber'),
-            'Zipcode' => config('app.default_postal'),
-            'Number' => config('app.default_number'),
-            'Limit' => 20,
-            'CountryCode' => 'NL'
         ];
     }
 
-    public function locations()
+    public function locations(array $data)
     {
-        $locations = Http::post($this->url . '/utility/pickuppoints-for-address', $this->authenticate())->json();
+        $parameters = [
+            'Zipcode' => $data['postal'],
+            'Number' => $data['number'],
+            'Limit' => $data['limit'],
+            'CountryCode' => $data['country']
+        ];
+
+        $locations = Http::post($this->url . '/utility/pickuppoints-for-address', array_merge($this->authenticate(), $parameters))->json();
 
         $mappedLocations = [];
 

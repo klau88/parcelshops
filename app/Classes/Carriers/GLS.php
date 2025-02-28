@@ -26,12 +26,14 @@ class GLS implements Carrier
         // TODO: Implement authenticate() method.
     }
 
-    public function locations()
+    public function locations(array $data)
     {
+        if ($data['limit'] > 10) $data['limit'] = 10;
+
         $locations = Http::post($this->url . '/ParcelShop/GetParcelShops', [
-            'countryCode' => 'NL',
-            'zipCode' => config('app.default_postal'),
-            'amountOfShops' => 10,
+            'countryCode' => $data['country'],
+            'zipCode' => $data['postal'],
+            'amountOfShops' => $data['limit'],
             'username' => config('carriers.gls.username'),
             'password' => config('carriers.gls.password'),
         ])->json();

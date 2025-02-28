@@ -29,11 +29,12 @@ class PostNL implements Carrier
         ]);
     }
 
-    public function locations()
+    public function locations(array $data)
     {
         $locations = $this->authenticate()->get($this->url . '/shipment/v2_1/locations/nearest', [
-            'Latitude' => config('app.default_lat'),
-            'Longitude' => config('app.default_lng')
+            'Latitude' => $data['latitude'],
+            'Longitude' => $data['longitude'],
+            'CountryCode' => $data['country'],
         ])->json();
 
         $mappedLocations = [];

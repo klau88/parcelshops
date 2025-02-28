@@ -42,12 +42,21 @@ class ParcelshopsController extends Controller
         $carriers = [];
         $icons = [];
 
+        $data = [
+            'latitude' => config('app.default_lat'),
+            'longitude' => config('app.default_lng'),
+            'postal' => config('app.default_postal'),
+            'number' => config('app.default_number'),
+            'country' => config('app.default_country') ?? 'NL',
+            'limit' => 20
+        ];
+
         foreach (Carrier::cases() as $case) {
             array_push($carriers, $case->name);
             $carrier = $this->selectCarrier($case->name);
             $icons[$case->name] = asset('images/icons/' . strtolower($case->name) . '-marker.png');
 
-            foreach ($carrier->locations() as $location) {
+            foreach ($carrier->locations($data) as $location) {
                 array_push($locations, $location);
             }
         }
