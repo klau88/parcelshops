@@ -1,5 +1,4 @@
 <script setup>
-// import {LMap, LTileLayer, LMarker} from 'vue3-leaflet';
 import {ref, onMounted} from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -69,7 +68,7 @@ onMounted(() => {
 
     const iconOptions = {
         title: 'Company name',
-        draggable: true,
+        // draggable: true,
         icon: L.icon({
             iconUrl: props.defaultMarkerIcon,
             iconSize: [36, 51],
@@ -79,10 +78,10 @@ onMounted(() => {
 
     const marker = new L.Marker([props.latitude, props.longitude], iconOptions);
     marker.addTo(map.value);
-    marker.on('drag', event => {
-        props.latitude = event.latlng.lat;
-        props.longitude = event.latlng.lng;
-    });
+    // marker.on('drag', event => {
+    //     props.latitude = event.latlng.lat;
+    //     props.longitude = event.latlng.lng;
+    // });
 
     map.value.on('click', event => {
         props.latitude = event.latlng.lat;

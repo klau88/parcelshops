@@ -4,7 +4,6 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import SelectOption from "@/Components/SelectOption.vue";
 import {router} from "@inertiajs/vue3";
-import L from 'leaflet';
 
 const props = defineProps({
     carriers: String,
