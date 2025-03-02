@@ -9,8 +9,7 @@ use App\Classes\Carriers\Homerr;
 use App\Classes\Carriers\Intrapost;
 use App\Classes\Carriers\PostNL;
 use App\Enums\Carrier;
-use App\Models\Parcelshop;
-use Illuminate\Http\Request;
+use App\Classes\Carriers\Carrier as CarrierInterface;
 use Inertia\Inertia;
 
 class ParcelshopsController extends Controller
@@ -33,84 +32,56 @@ class ParcelshopsController extends Controller
         }
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    private function getIcons()
     {
-        $locations = [];
-        $carriers = [];
         $icons = [];
 
-        $data = [
-            'latitude' => config('app.default_lat'),
-            'longitude' => config('app.default_lng'),
-            'postal' => config('app.default_postal'),
-            'number' => config('app.default_number'),
-            'country' => config('app.default_country') ?? 'NL',
+        foreach (Carrier::cases() as $carrier) {
+            $icons[$carrier->name] = asset('images/icons/' . strtolower($carrier->name) . '-marker.png');
+        }
+
+        return $icons;
+    }
+
+    public function locations(): array
+    {
+        $parameters = [
+            'latitude' => request()->latitude ?? config('app.default_lat'),
+            'longitude' => request()->longitude ?? config('app.default_lng'),
+            'postal' => request()->postal ?? config('app.default_postal'),
+            'number' => request()->number ?? config('app.default_number'),
+            'country' => request()->country ?? config('app.default_country') ?? 'NL',
             'limit' => 20
         ];
 
-        foreach (Carrier::cases() as $case) {
-            array_push($carriers, $case->name);
-            $carrier = $this->selectCarrier($case->name);
-            $icons[$case->name] = asset('images/icons/' . strtolower($case->name) . '-marker.png');
+        $carriers = array_filter(array_column(Carrier::cases(), 'name'), fn($carrier) => request()->carrier === null || $carrier === request()->carrier);
 
-            foreach ($carrier->locations($data) as $location) {
-                array_push($locations, $location);
+        $locations = [];
+
+        foreach ($carriers as $carrier) {
+            $parcelshops = $this->selectCarrier($carrier)->locations($parameters);
+
+            foreach ($parcelshops as $parcelshop) {
+                array_push($locations, $parcelshop);
             }
         }
 
-        $defaultMarkerIcon = asset('images/icons/parcelpro-marker.png');
-
-        return Inertia::render('Parcelshops/Map', compact('locations', 'carriers', 'icons', 'defaultMarkerIcon'));
+        return $locations;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Parcelshop $parcelshops)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Parcelshop $parcelshops)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Parcelshop $parcelshops)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Parcelshop $parcelshops)
-    {
-        //
+        return Inertia::render('Parcelshops/Map', [
+            'locations' => $this->locations(),
+            'carriers' => array_column(Carrier::cases(), 'name'),
+            'icons' => $this->getIcons(),
+            'defaultMarkerIcon' => asset('images/icons/parcelpro-marker.png'),
+            'latitude' => request()->latitude ?? config('app.default_lat'),
+            'longitude' => request()->longitude ?? config('app.default_lng'),
+            'postal' => request()->postal ?? config('app.default_postal'),
+            'number' => request()->number ?? config('app.default_number'),
+            'country' => request()->country ?? config('app.default_country') ?? 'NL',
+            'selectedCarrier' => request()->carrier ?? null,
+        ]);
     }
 }

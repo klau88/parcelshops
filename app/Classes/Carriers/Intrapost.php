@@ -16,7 +16,7 @@ class Intrapost implements Carrier
         $this->name = 'Intrapost';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -29,7 +29,7 @@ class Intrapost implements Carrier
         ];
     }
 
-    public function locations(array $data)
+    public function locations(array $data): array
     {
         $parameters = [
             'Zipcode' => $data['postal'],

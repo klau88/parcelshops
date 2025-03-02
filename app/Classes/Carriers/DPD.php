@@ -18,7 +18,7 @@ class DPD implements Carrier
         $this->name = 'DPD';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -44,7 +44,7 @@ class DPD implements Carrier
         return $authClient->getAuth($authData);
     }
 
-    public function locations(array $data)
+    public function locations(array $data): array
     {
         $parcelshopClient = new SoapClient($this->url . '/ParcelShopFinderServiceV50.wsdl', [
             'stream_context' => stream_context_create([

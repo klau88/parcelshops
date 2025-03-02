@@ -16,7 +16,7 @@ class Homerr implements Carrier
         $this->name = 'Homerr';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -26,7 +26,7 @@ class Homerr implements Carrier
         // TODO: Implement authenticate() method.
     }
 
-    public function locations(array $data)
+    public function locations(array $data): array
     {
         $locations = Http::get($this->url . '/v1/homerrs/dropoff', [
             'postalcode' => $data['postal'],

@@ -26,5 +26,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/map', [ParcelshopsController::class, 'index'])->name('parcelshops.index');
+Route::post('/locations', [ParcelshopsController::class, 'locations'])->name('parcelshops.locations');
 
 require __DIR__.'/auth.php';

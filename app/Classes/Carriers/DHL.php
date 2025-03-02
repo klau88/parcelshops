@@ -16,7 +16,7 @@ class DHL implements Carrier
         $this->name = 'DHL';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -30,7 +30,7 @@ class DHL implements Carrier
         ]);
     }
 
-    public function locations(array $data)
+    public function locations(array $data): array
     {
         $locations = $this->authenticate()
             ->get($this->url . '/parcel-shop-locations/NL?postalCode=' . $data['postal'] . '&limit=' . $data['limit'])

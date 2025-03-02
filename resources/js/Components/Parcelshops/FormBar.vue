@@ -1,32 +1,80 @@
 <script setup>
-import {defineProps} from 'vue';
+import TextInput from "@/Components/TextInput.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import SelectOption from "@/Components/SelectOption.vue";
+import {router} from "@inertiajs/vue3";
+import L from 'leaflet';
 
 const props = defineProps({
-    carriers: {
-        type: String
-    }
+    carriers: String,
+    latitude: Number,
+    longitude: Number,
+    postal: String,
+    carrier: String,
+    number: Number
 });
+
+const emit = defineEmits('updateLocations');
+
+const getAddress = async () => {
+
+    const response = await axios.post('/locations', {
+        carrier: props.carrier,
+        latitude: props.latitude,
+        longitude: props.longitude,
+        postal: props.postal,
+        number: props.number
+    });
+
+    emit('updateLocations', response.data);
+
+    return response.data;
+}
+
+const clicked = (event) => {
+    event.preventDefault();
+
+    getAddress();
+
+    router.get('/map', {
+        latitude: props.latitude,
+        longitude: props.longitude,
+        postal: props.postal,
+        number: props.number,
+        carrier: props.carrier
+    }, {
+        preserveState: true
+    });
+}
 </script>
 
 <template>
-    <div class="flex">
-        <div class="">
-            <span>Latitude</span>
-            <input type="text">
+    <div class="flex-col">
+        <div class="m-2 flex flex-col">
+            <InputLabel value="Latitude"/>
+            <TextInput v-model="props.latitude"/>
         </div>
-        <div class="ml-2">
-            <span>Longitude</span>
-            <input type="text">
+        <div class="m-2 flex flex-col">
+            <InputLabel value="Longitude"/>
+            <TextInput v-model="props.longitude"/>
         </div>
-        <div class="ml-2">
-            <span>Postal</span>
-            <input type="text">
+        <div class="m-2 flex flex-col">
+            <InputLabel value="Postal code"/>
+            <TextInput v-model="props.postal"/>
         </div>
-        <div class="ml-2">
-            <span>Carrier</span>
-            <select>
-                <option v-for="carrier of carriers" v-text="carrier" :value="carrier"></option>
-            </select>
+        <div class="m-2 flex flex-col">
+            <InputLabel value="Number"/>
+            <TextInput v-model="props.number"/>
+        </div>
+        <div class="m-2 flex flex-col">
+            <InputLabel value="Carrier"/>
+            <SelectOption v-model="props.carrier" placeholder="Select a carrier..." :options="carriers"/>
+        </div>
+        <div class="m-2 w-full">
+            <PrimaryButton @click="clicked">
+                Click
+            </PrimaryButton>
         </div>
     </div>
 </template>

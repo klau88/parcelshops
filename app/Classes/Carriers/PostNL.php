@@ -16,7 +16,7 @@ class PostNL implements Carrier
         $this->name = 'PostNL';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -29,7 +29,7 @@ class PostNL implements Carrier
         ]);
     }
 
-    public function locations(array $data)
+    public function locations(array $data): array
     {
         $locations = $this->authenticate()->get($this->url . '/shipment/v2_1/locations/nearest', [
             'Latitude' => $data['latitude'],

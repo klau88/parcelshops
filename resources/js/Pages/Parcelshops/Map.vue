@@ -3,30 +3,65 @@
 import {ref, onMounted} from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import FormBar from "@/Components/Parcelshops/FormBar.vue";
+import FormBar from '@/Components/Parcelshops/FormBar.vue';
 
-const defaultLat = ref(51.860948);
-const defaultLng = ref(4.394288);
 const defaultZoom = ref(13);
 const map = ref(null);
 
 const props = defineProps({
-    locations: {
-        type: Array
-    },
-    carriers: {
-        type: Array
-    },
-    icons: {
-        type: Array
-    },
-    defaultMarkerIcon: {
-        type: String
-    }
+    locations: Array,
+    carriers: Array,
+    icons: Array,
+    defaultMarkerIcon: String,
+    parameters: Array,
+    latitude: Number,
+    longitude: Number,
+    postal: String,
+    number: Number,
+    selectedCarrier: String
 });
+const getAddressFromLatLng = async (latitude, longitude) => {
+    const {data} = await axios.get('https://nominatim.openstreetmap.org/reverse', {
+        params: {
+            format: 'jsonv2',
+            lat: latitude,
+            lon: longitude,
+        },
+    });
+
+    props.postal = data.address.postcode;
+    props.number = parseInt(data.address.house_number ?? 1);
+
+    return data.address;
+}
+
+const markers = [];
+
+const addMarker = location => {
+    const marker = new L.Marker([location.latitude, location.longitude], {
+        title: location.name,
+        icon: L.icon({
+            iconUrl: props.icons[location.carrier],
+            iconSize: [36, 51],
+            iconAnchor: [18, 51]
+        })
+    }).addTo(map.value).bindPopup(location.name);
+
+    markers.push(marker);
+}
+
+const updateLocations = locations => {
+    for (const marker of markers) {
+        marker.remove();
+    }
+
+    for(const location of locations) {
+        addMarker(location);
+    }
+}
 
 onMounted(() => {
-    map.value = L.map('map').setView([defaultLat.value, defaultLng.value], defaultZoom.value);
+    map.value = L.map('map').setView([props.latitude, props.longitude], defaultZoom.value);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -34,30 +69,45 @@ onMounted(() => {
 
     const iconOptions = {
         title: 'Company name',
-        // draggable: true,
+        draggable: true,
         icon: L.icon({
-            iconUrl: props.defaultMarkerIcon
+            iconUrl: props.defaultMarkerIcon,
+            iconSize: [36, 51],
+            iconAnchor: [18, 51]
         })
     }
 
-    const marker = new L.Marker([defaultLat.value, defaultLng.value], iconOptions);
-    marker.addTo(map.value)
+    const marker = new L.Marker([props.latitude, props.longitude], iconOptions);
+    marker.addTo(map.value);
+    marker.on('drag', event => {
+        props.latitude = event.latlng.lat;
+        props.longitude = event.latlng.lng;
+    });
+
+    map.value.on('click', event => {
+        props.latitude = event.latlng.lat;
+        props.longitude = event.latlng.lng;
+        marker.setLatLng([event.latlng.lat, event.latlng.lng]).update();
+        getAddressFromLatLng(props.latitude, props.longitude);
+    });
 
     for (const location of props.locations) {
-        new L.Marker([location.latitude, location.longitude], {
-            title: location.name,
-            icon: L.icon({
-                iconUrl: props.icons[location.carrier],
-                iconSize: [37, 51]
-            })
-        }).addTo(map.value).bindPopup(location.name);
+        addMarker(location);
     }
 });
 </script>
 
 <template>
     <div class="flex">
-        <FormBar :carriers="carriers"/>
+        <FormBar
+            :carriers="carriers"
+            :latitude="latitude"
+            :longitude="longitude"
+            :postal="postal"
+            :number="number"
+            :carrier="selectedCarrier"
+            @updateLocations="updateLocations"
+        />
         <div id="map">
         </div>
     </div>

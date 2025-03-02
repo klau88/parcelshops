@@ -16,7 +16,7 @@ class GLS implements Carrier
         $this->name = 'GLS';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -26,7 +26,7 @@ class GLS implements Carrier
         // TODO: Implement authenticate() method.
     }
 
-    public function locations(array $data)
+    public function locations(array $data): array
     {
         if ($data['limit'] > 10) $data['limit'] = 10;
 
