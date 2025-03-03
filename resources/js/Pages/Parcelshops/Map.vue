@@ -54,7 +54,7 @@ const updateLocations = locations => {
         marker.remove();
     }
 
-    for(const location of locations) {
+    for (const location of locations) {
         addMarker(location);
     }
 }
@@ -66,22 +66,21 @@ onMounted(() => {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map.value);
 
-    const iconOptions = {
+    const marker = new L.Marker([props.latitude, props.longitude], {
         title: 'Company name',
-        // draggable: true,
+        draggable: true,
         icon: L.icon({
             iconUrl: props.defaultMarkerIcon,
             iconSize: [36, 51],
             iconAnchor: [18, 51]
         })
-    }
+    }).addTo(map.value).bindPopup(`<p>${props.latitude} ${props.longitude}</p>`);
 
-    const marker = new L.Marker([props.latitude, props.longitude], iconOptions);
-    marker.addTo(map.value);
-    // marker.on('drag', event => {
-    //     props.latitude = event.latlng.lat;
-    //     props.longitude = event.latlng.lng;
-    // });
+    marker.on('dragend', event => {
+        props.latitude = event.target._latlng.lat;
+        props.longitude = event.target._latlng.lng;
+        getAddressFromLatLng(event.target._latlng.lat, event.target._latlng.lng);
+    });
 
     map.value.on('click', event => {
         props.latitude = event.latlng.lat;
@@ -97,14 +96,14 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="flex">
+    <div class="flex w-full">
         <FormBar
-            :carriers="carriers"
-            :latitude="latitude"
-            :longitude="longitude"
-            :postal="postal"
-            :number="number"
-            :carrier="selectedCarrier"
+            :carriers="props.carriers"
+            :latitude="props.latitude"
+            :longitude="props.longitude"
+            :postal="props.postal"
+            :number="props.number"
+            :carrier="props.selectedCarrier"
             @updateLocations="updateLocations"
         />
         <div id="map">

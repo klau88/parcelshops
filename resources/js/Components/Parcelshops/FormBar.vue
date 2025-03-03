@@ -49,7 +49,7 @@ const clicked = (event) => {
 </script>
 
 <template>
-    <div class="flex-col">
+    <div class="flex flex-col">
         <div class="m-2 flex flex-col">
             <InputLabel value="Latitude"/>
             <TextInput v-model="props.latitude"/>
