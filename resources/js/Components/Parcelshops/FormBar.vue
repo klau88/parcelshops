@@ -70,8 +70,8 @@ const clicked = (event) => {
             <InputLabel value="Carrier"/>
             <SelectOption v-model="props.carrier" placeholder="Select a carrier..." :options="carriers"/>
         </div>
-        <div class="m-2 w-full">
-            <PrimaryButton @click="clicked">
+        <div class="m-2">
+            <PrimaryButton @click="clicked" class="p-2 w-full justify-center">
                 Click
             </PrimaryButton>
         </div>
