@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, toRaw} from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import FormBar from '@/Components/Parcelshops/FormBar.vue';
@@ -47,7 +47,7 @@ const addMarker = location => {
             iconSize: [36, 51],
             iconAnchor: [18, 51]
         })
-    }).addTo(map.value).bindPopup(location.name);
+    }).addTo(toRaw(map.value)).bindPopup(location.name);
 
     markers.push(marker);
 }
