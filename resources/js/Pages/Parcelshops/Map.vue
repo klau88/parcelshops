@@ -17,6 +17,8 @@ const props = defineProps({
     longitude: Number,
     postal: String,
     number: Number,
+    country: String,
+    countries: Array,
     selectedCarrier: String
 });
 const getAddressFromLatLng = async (latitude, longitude) => {
@@ -30,6 +32,7 @@ const getAddressFromLatLng = async (latitude, longitude) => {
 
     props.postal = data.address.postcode;
     props.number = parseInt(data.address.house_number ?? 1);
+    props.country = data.address.country_code.toUpperCase();
 
     return data.address;
 }
@@ -103,6 +106,8 @@ onMounted(() => {
             :longitude="props.longitude"
             :postal="props.postal"
             :number="props.number"
+            :country="props.country"
+            :countries="props.countries"
             :carrier="props.selectedCarrier"
             @updateLocations="updateLocations"
         />
