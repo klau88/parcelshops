@@ -33,7 +33,7 @@ class Intrapost implements Carrier
     {
         $parameters = [
             'Zipcode' => $data['postal'],
-            'Number' => $data['number'],
+            'Number' => intval($data['number']) ?? 1,
             'Limit' => $data['limit'],
             'CountryCode' => $data['country']
         ];

@@ -16,7 +16,7 @@ const props = defineProps({
     latitude: Number,
     longitude: Number,
     postal: String,
-    number: Number,
+    number: String,
     country: String,
     countries: Array,
     selectedCarrier: String
@@ -31,7 +31,7 @@ const getAddressFromLatLng = async (latitude, longitude) => {
     });
 
     props.postal = data.address.postcode;
-    props.number = parseInt(data.address.house_number ?? 1);
+    props.number = data.address.house_number;
     props.country = data.address.country_code.toUpperCase();
 
     return data.address;
@@ -45,7 +45,8 @@ const addMarker = location => {
         icon: L.icon({
             iconUrl: props.icons[location.carrier],
             iconSize: [36, 51],
-            iconAnchor: [18, 51]
+            iconAnchor: [18, 51],
+            popupAnchor: [0, -51]
         })
     }).addTo(toRaw(map.value)).bindPopup(location.name);
 
@@ -70,12 +71,13 @@ onMounted(() => {
     }).addTo(map.value);
 
     const marker = new L.Marker([props.latitude, props.longitude], {
-        title: 'Company name',
+        title: 'Current location',
         draggable: true,
         icon: L.icon({
             iconUrl: props.defaultMarkerIcon,
             iconSize: [36, 51],
-            iconAnchor: [18, 51]
+            iconAnchor: [18, 51],
+            popupAnchor: [0, -51]
         })
     }).addTo(map.value).bindPopup(`<p>${props.latitude} ${props.longitude}</p>`);
 

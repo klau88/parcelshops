@@ -30,7 +30,7 @@ class Homerr implements Carrier
     {
         $locations = Http::get($this->url . '/v1/homerrs/dropoff', [
             'postalcode' => $data['postal'],
-            'number' => $data['number'],
+            'number' => $data['number'] ?? null,
             'country' => $data['country'],
             'limit' => $data['limit'],
         ])->json();
