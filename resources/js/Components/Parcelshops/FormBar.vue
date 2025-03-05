@@ -22,6 +22,7 @@ const getAddress = async () => {
 
     const response = await axios.post('/locations', {
         carrier: props.carrier,
+        country: props.country,
         latitude: props.latitude,
         longitude: props.longitude,
         postal: props.postal,
