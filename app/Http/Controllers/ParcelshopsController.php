@@ -45,15 +45,15 @@ class ParcelshopsController extends Controller
 
     public function locations(): array
     {
-        $parameters = [
-            'latitude' => request()->latitude ?? config('app.default_lat'),
-            'longitude' => request()->longitude ?? config('app.default_lng'),
-            'postal' => request()->postal ?? config('app.default_postal'),
-            'number' => request()->number ?? config('app.default_number'),
-            'country' => request()->country ?? config('app.default_country') ?? 'NL',
-            'limit' => 20
+        $parameters = request()->all() ?: [
+            'latitude' => config('app.default_lat'),
+            'longitude' => config('app.default_lng'),
+            'postal' => config('app.default_postal'),
+            'number' => config('app.default_number'),
+            'country' => config('app.default_country') ?? 'NL',
         ];
 
+        $parameters['limit'] = 20;
         $carriers = array_filter(array_column(Carrier::cases(), 'name'), fn($carrier) => request()->carrier === null || $carrier === request()->carrier);
 
         $locations = [];
