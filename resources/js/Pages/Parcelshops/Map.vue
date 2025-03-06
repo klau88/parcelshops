@@ -22,19 +22,19 @@ const props = defineProps({
     selectedCarrier: String
 });
 const getAddressFromLatLng = async (latitude, longitude) => {
-    const {data} = await axios.get('https://nominatim.openstreetmap.org/reverse', {
+    const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
         params: {
-            format: 'jsonv2',
+            format: 'json',
             lat: latitude,
             lon: longitude,
         },
     });
 
-    props.postal = data.address.postcode;
-    props.number = data.address.house_number;
-    props.country = data.address.country_code.toUpperCase();
+    props.postal = response.data.address.postcode;
+    props.number = response.data.address.house_number;
+    props.country = response.data.address.country_code.toUpperCase();
 
-    return data.address;
+    return response.data.address;
 }
 
 const markers = [];

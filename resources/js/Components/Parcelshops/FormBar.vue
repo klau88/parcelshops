@@ -18,35 +18,29 @@ const props = defineProps({
 
 const emit = defineEmits('updateLocations');
 
-const getAddress = async () => {
+const getAddress = async data => {
 
-    const response = await axios.post('/locations', {
-        carrier: props.carrier,
-        country: props.country,
-        latitude: props.latitude,
-        longitude: props.longitude,
-        postal: props.postal,
-        number: props.number
-    });
+    const response = await axios.post('/locations', data);
 
     emit('updateLocations', response.data);
 
     return response.data;
 }
 
-const clicked = (event) => {
-    event.preventDefault();
+const clicked = () => {
 
-    getAddress();
-
-    router.get('/map', {
+    const data = {
         country: props.country,
         latitude: props.latitude,
         longitude: props.longitude,
         postal: props.postal,
         number: props.number,
         carrier: props.carrier
-    }, {
+    };
+
+    getAddress(data);
+
+    router.get('/map', data, {
         preserveState: true
     });
 }
@@ -56,7 +50,7 @@ const clicked = (event) => {
     <div class="flex flex-col">
         <div class="m-2 flex flex-col">
             <InputLabel value="Country"/>
-            <SelectOption v-model="props.country" placeholder="Select a country..." :options="props.countries" />
+            <SelectOption v-model="props.country" placeholder="Select a country..." :options="props.countries"/>
         </div>
         <div class="m-2 flex flex-col">
             <InputLabel value="Latitude"/>
@@ -79,8 +73,8 @@ const clicked = (event) => {
             <SelectOption v-model="props.carrier" placeholder="Select a carrier..." :options="props.carriers"/>
         </div>
         <div class="m-2">
-            <PrimaryButton @click="clicked" class="p-2 w-full justify-center">
-                Click
+            <PrimaryButton @click.prevent="clicked" class="p-2 w-full justify-center">
+                Submit
             </PrimaryButton>
         </div>
     </div>
