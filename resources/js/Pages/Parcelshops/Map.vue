@@ -6,6 +6,7 @@ import FormBar from '@/Components/Parcelshops/FormBar.vue';
 
 const defaultZoom = ref(13);
 const map = ref(null);
+const markers = [];
 
 const props = defineProps({
     locations: Array,
@@ -21,6 +22,7 @@ const props = defineProps({
     countries: Array,
     selectedCarrier: String
 });
+
 const getAddressFromLatLng = async (latitude, longitude) => {
     const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
         params: {
@@ -37,17 +39,10 @@ const getAddressFromLatLng = async (latitude, longitude) => {
     return response.data.address;
 }
 
-const markers = [];
-
 const addMarker = location => {
     const marker = new L.Marker([location.latitude, location.longitude], {
         title: location.name,
-        icon: L.icon({
-            iconUrl: props.icons[location.carrier],
-            iconSize: [36, 51],
-            iconAnchor: [18, 51],
-            popupAnchor: [0, -51]
-        })
+        icon: L.icon(iconOptions(props.icons[location.carrier]))
     }).addTo(toRaw(map.value)).bindPopup(location.name);
 
     markers.push(marker);
@@ -63,6 +58,15 @@ const updateLocations = locations => {
     }
 }
 
+const iconOptions = icon => {
+    return {
+        iconUrl: icon,
+        iconSize: [36, 51],
+        iconAnchor: [18, 51],
+        popupAnchor: [0, -51]
+    }
+};
+
 onMounted(() => {
     map.value = L.map('map').setView([props.latitude, props.longitude], defaultZoom.value);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -73,12 +77,7 @@ onMounted(() => {
     const marker = new L.Marker([props.latitude, props.longitude], {
         title: 'Current location',
         draggable: true,
-        icon: L.icon({
-            iconUrl: props.defaultMarkerIcon,
-            iconSize: [36, 51],
-            iconAnchor: [18, 51],
-            popupAnchor: [0, -51]
-        })
+        icon: L.icon(iconOptions(props.defaultMarkerIcon))
     }).addTo(map.value).bindPopup(`<p>${props.latitude} ${props.longitude}</p>`);
 
     marker.on('dragend', event => {
