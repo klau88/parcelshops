@@ -10,6 +10,7 @@ use App\Classes\Carriers\Intrapost;
 use App\Classes\Carriers\PostNL;
 use App\Enums\Carrier;
 use App\Enums\Country;
+use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
 
 class ParcelshopsController extends Controller
@@ -37,7 +38,7 @@ class ParcelshopsController extends Controller
         $icons = [];
 
         foreach (Carrier::cases() as $carrier) {
-            $icons[$carrier->name] = asset('images/icons/' . strtolower($carrier->name) . '-marker.png');
+            $icons[$carrier->name] = Vite::asset('resources/images/icons/' . strtolower($carrier->name) . '-marker.png');
         }
 
         return $icons;
