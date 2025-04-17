@@ -9,15 +9,14 @@ const map = ref(null);
 const markers = [];
 
 const props = defineProps({
-    locations: Array,
+    locations: Object,
     carriers: Array,
-    icons: Array,
+    icons: Object,
     defaultMarkerIcon: String,
-    parameters: Array,
     latitude: Number,
     longitude: Number,
     postal: String,
-    number: String,
+    number: Number,
     country: String,
     countries: Array,
     selectedCarrier: String
@@ -39,11 +38,40 @@ const getAddressFromLatLng = async (latitude, longitude) => {
     return response.data.address;
 }
 
+const closedMessage = 'closed';
+
+const locationView = location => {
+    return `
+        <div>
+            <h3 class="text-sm font-bold">${location.name}</h3>
+            <div>
+                <p>
+                ${location.street} ${location.number}
+                </p>
+                <p>
+                ${location.postal_code} ${location.city}
+                </p>
+                <p>
+                <ul>
+                    <li v-if="location.monday">Monday: ${location.monday ?? closedMessage}</li>
+                    <li v-if="location.tuesday">Tuesday: ${location.tuesday ?? closedMessage}</li>
+                    <li v-if="location.wednesday">Wednesday: ${location.wednesday ?? closedMessage}</li>
+                    <li v-if="location.thursday">Thursday: ${location.thursday ?? closedMessage}</li>
+                    <li v-if="location.friday">Friday: ${location.friday ?? closedMessage}</li>
+                    <li v-if="location.saturday">Saturday: ${location.saturday ?? closedMessage}</li>
+                    <li v-if="location.sunday">Sunday: ${location.sunday ?? closedMessage}</li>
+                </ul>
+                </p>
+            </div>
+        </div>
+    `;
+}
+
 const addMarker = location => {
     const marker = new L.Marker([location.latitude, location.longitude], {
         title: location.name,
         icon: L.icon(iconOptions(props.icons[location.carrier]))
-    }).addTo(toRaw(map.value)).bindPopup(location.name);
+    }).addTo(toRaw(map.value)).bindPopup(locationView(location));
 
     markers.push(marker);
 }

@@ -54,6 +54,13 @@ class PostNL implements Carrier
                 'telephone' => null,
                 'latitude' => $location['Latitude'],
                 'longitude' => $location['Longitude'],
+                'monday' => $location['OpeningHours']['Monday']['string'] ?? null,
+                'tuesday' => $location['OpeningHours']['Tuesday']['string'] ?? null,
+                'wednesday' => $location['OpeningHours']['Wednesday']['string'] ?? null,
+                'thursday' => $location['OpeningHours']['Thursday']['string'] ?? null,
+                'friday' => $location['OpeningHours']['Friday']['string'] ?? null,
+                'saturday' => $location['OpeningHours']['Saturday']['string'] ?? null,
+                'sunday' => $location['OpeningHours']['Sunday']['string'] ?? null,
             ];
 
             array_push($mappedLocations, $mapped);

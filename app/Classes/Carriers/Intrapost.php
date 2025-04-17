@@ -57,7 +57,20 @@ class Intrapost implements Carrier
                 'telephone' => null,
                 'latitude' => $location['GeoLocation']['Latitude'],
                 'longitude' => $location['GeoLocation']['Longitude'],
+                'monday' => null,
+                'tuesday' => null,
+                'wednesday' => null,
+                'thursday' => null,
+                'friday' => null,
+                'saturday' => null,
+                'sunday' => null,
             ];
+
+            foreach($location['OpeningHours'] as $time) {
+                $day = strtolower($time['Day']) ?? null;
+
+                $mapped[$day] = $time['Time'];
+            }
 
             array_push($mappedLocations, $mapped);
 

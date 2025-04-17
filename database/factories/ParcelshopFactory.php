@@ -31,6 +31,13 @@ class ParcelshopFactory extends Factory
             'telephone' => fake()->phoneNumber(),
             'latitude' => fake()->latitude(),
             'longitude' => fake()->longitude(),
+            'monday' => fake()->time('H:i') . '-' . fake()->time('H:i'),
+            'tuesday' => fake()->time('H:i') . '-' . fake()->time('H:i'),
+            'wednesday' => fake()->time('H:i') . '-' . fake()->time('H:i'),
+            'thursday' => fake()->time('H:i') . '-' . fake()->time('H:i'),
+            'friday' => fake()->time('H:i') . '-' . fake()->time('H:i'),
+            'saturday' => fake()->time('H:i') . '-' . fake()->time('H:i'),
+            'sunday' => fake()->time('H:i') . '-' . fake()->time('H:i'),
         ];
     }
 }

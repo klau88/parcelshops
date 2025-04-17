@@ -55,7 +55,38 @@ class GLS implements Carrier
                 'telephone' => null,
                 'latitude' => $location['geoCoordinates']['lat'],
                 'longitude' => $location['geoCoordinates']['lng'],
+                'monday' => null,
+                'tuesday' => null,
+                'wednesday' => null,
+                'thursday' => null,
+                'friday' => null,
+                'saturday' => null,
+                'sunday' => null,
             ];
+
+            foreach ($location['businessHours'] as $time) {
+                if ($time['dayOfWeek'] === 'Ma') {
+                    $mapped['monday'] = $time['openTime'] . '-' . $time['closedTime'];
+                }
+                if ($time['dayOfWeek'] === 'Di') {
+                    $mapped['tuesday'] = $time['openTime'] . '-' . $time['closedTime'];
+                }
+                if ($time['dayOfWeek'] === 'Wo') {
+                    $mapped['wednesday'] = $time['openTime'] . '-' . $time['closedTime'];
+                }
+                if ($time['dayOfWeek'] === 'Do') {
+                    $mapped['thursday'] = $time['openTime'] . '-' . $time['closedTime'];
+                }
+                if ($time['dayOfWeek'] === 'Vr') {
+                    $mapped['friday'] = $time['openTime'] . '-' . $time['closedTime'];
+                }
+                if ($time['dayOfWeek'] === 'Za') {
+                    $mapped['saturday'] = $time['openTime'] . '-' . $time['closedTime'];
+                }
+                if ($time['dayOfWeek'] === 'Zo') {
+                    $mapped['sunday'] = $time['openTime'] . '-' . $time['closedTime'];
+                }
+            }
 
             array_push($mappedLocations, $mapped);
 

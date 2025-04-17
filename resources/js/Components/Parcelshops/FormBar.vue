@@ -4,9 +4,10 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import SelectOption from "@/Components/SelectOption.vue";
 import {router} from "@inertiajs/vue3";
+import NumberInput from "@/Components/NumberInput.vue";
 
 const props = defineProps({
-    carriers: String,
+    carriers: Array,
     latitude: Number,
     longitude: Number,
     postal: String,
@@ -54,11 +55,11 @@ const clicked = () => {
         </div>
         <div class="m-2 flex flex-col">
             <InputLabel value="Latitude"/>
-            <TextInput v-model="props.latitude"/>
+            <NumberInput v-model="props.latitude"/>
         </div>
         <div class="m-2 flex flex-col">
             <InputLabel value="Longitude"/>
-            <TextInput v-model="props.longitude"/>
+            <NumberInput v-model="props.longitude"/>
         </div>
         <div class="m-2 flex flex-col">
             <InputLabel value="Postal code"/>
@@ -66,7 +67,7 @@ const clicked = () => {
         </div>
         <div class="m-2 flex flex-col">
             <InputLabel value="Number"/>
-            <TextInput v-model="props.number"/>
+            <NumberInput v-model="props.number"/>
         </div>
         <div class="m-2 flex flex-col">
             <InputLabel value="Carrier"/>

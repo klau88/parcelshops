@@ -27,6 +27,13 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('latitude');
             $table->string('longitude');
+            $table->string('monday')->nullable();
+            $table->string('tuesday')->nullable();
+            $table->string('wednesday')->nullable();
+            $table->string('thursday')->nullable();
+            $table->string('friday')->nullable();
+            $table->string('saturday')->nullable();
+            $table->string('sunday')->nullable();
             $table->timestamps();
         });
     }

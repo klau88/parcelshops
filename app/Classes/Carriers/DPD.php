@@ -3,6 +3,7 @@
 namespace App\Classes\Carriers;
 
 use App\Models\Parcelshop;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use SoapClient;
 use SoapHeader;
@@ -88,6 +89,13 @@ class DPD implements Carrier
                 'country' => $location->country,
                 'latitude' => $location->latitude,
                 'longitude' => $location->longitude,
+                'monday' => null,
+                'tuesday' => null,
+                'wednesday' => null,
+                'thursday' => null,
+                'friday' => null,
+                'saturday' => null,
+                'sunday' => null,
             ];
 
             if ($location->phone) {
@@ -96,6 +104,36 @@ class DPD implements Carrier
 
             if ($location->email) {
                 $mapped['email'] = $location->email;
+            }
+
+            foreach ($location->openingHours as $time) {
+                if ($time->weekday === 'maandag' && $time->openMorning !== '00:00' && $time->closeMorning !== '00:00') {
+                    $mapped['monday'] = Carbon::parse($time->openMorning)->format('H:i') . '-' . Carbon::parse($time->closeMorning)->format('H:i');
+                }
+
+                if ($time->weekday === 'dinsdag' && $time->openMorning !== '00:00' && $time->closeMorning !== '00:00') {
+                    $mapped['tuesday'] = Carbon::parse($time->openMorning)->format('H:i') . '-' . Carbon::parse($time->closeMorning)->format('H:i');
+                }
+
+                if ($time->weekday === 'woensdag' && $time->openMorning !== '00:00' && $time->closeMorning !== '00:00') {
+                    $mapped['wednesday'] = Carbon::parse($time->openMorning)->format('H:i') . '-' . Carbon::parse($time->closeMorning)->format('H:i');
+                }
+
+                if ($time->weekday === 'donderdag' && $time->openMorning !== '00:00' && $time->closeMorning !== '00:00') {
+                    $mapped['thursday'] = Carbon::parse($time->openMorning)->format('H:i') . '-' . Carbon::parse($time->closeMorning)->format('H:i');
+                }
+
+                if ($time->weekday === 'vrijdag' && $time->openMorning !== '00:00' && $time->closeMorning !== '00:00') {
+                    $mapped['friday'] = Carbon::parse($time->openMorning)->format('H:i') . '-' . Carbon::parse($time->closeMorning)->format('H:i');
+                }
+
+                if ($time->weekday === 'zaterdag' && $time->openMorning !== '00:00' && $time->closeMorning !== '00:00') {
+                    $mapped['saturday'] = Carbon::parse($time->openMorning)->format('H:i') . '-' . Carbon::parse($time->closeMorning)->format('H:i');
+                }
+
+                if ($time->weekday === 'zondag' && $time->openMorning !== '00:00' && $time->closeMorning !== '00:00') {
+                    $mapped['sunday'] = Carbon::parse($time->openMorning)->format('H:i') . '-' . Carbon::parse($time->closeMorning)->format('H:i');
+                }
             }
 
             array_push($mappedLocations, $mapped);

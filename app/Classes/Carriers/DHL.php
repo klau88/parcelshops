@@ -3,6 +3,7 @@
 namespace App\Classes\Carriers;
 
 use App\Models\Parcelshop;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -39,6 +40,8 @@ class DHL implements Carrier
         $mappedLocations = [];
 
         foreach ($locations as $location) {
+            $times = array_map(fn($time) => Carbon::parse($time['timeFrom'])->format('H:i') . '-' . Carbon::parse($time['timeTo'])->format('H:i'), $location['openingTimes']);
+
             $mapped = [
                 'external_id' => $location['id'],
                 'name' => $location['name'],
@@ -53,7 +56,44 @@ class DHL implements Carrier
                 'telephone' => null,
                 'latitude' => $location['geoLocation']['latitude'],
                 'longitude' => $location['geoLocation']['longitude'],
+                'monday' => null,
+                'tuesday' => null,
+                'wednesday' => null,
+                'thursday' => null,
+                'friday' => null,
+                'saturday' => null,
+                'sunday' => null,
             ];
+
+            foreach ($location['openingTimes'] as $time) {
+                if ($time['weekDay'] === 1) {
+                    $mapped['monday'] = Carbon::parse($time['timeFrom'])->format('H:i') . '-' . Carbon::parse($time['timeTo'])->format('H:i');
+                }
+
+                if ($time['weekDay'] === 2) {
+                    $mapped['tuesday'] = Carbon::parse($time['timeFrom'])->format('H:i') . '-' . Carbon::parse($time['timeTo'])->format('H:i');
+                }
+
+                if ($time['weekDay'] === 3) {
+                    $mapped['wednesday'] = Carbon::parse($time['timeFrom'])->format('H:i') . '-' . Carbon::parse($time['timeTo'])->format('H:i');
+                }
+
+                if ($time['weekDay'] === 4) {
+                    $mapped['thursday'] = Carbon::parse($time['timeFrom'])->format('H:i') . '-' . Carbon::parse($time['timeTo'])->format('H:i');
+                }
+
+                if ($time['weekDay'] === 5) {
+                    $mapped['friday'] = Carbon::parse($time['timeFrom'])->format('H:i') . '-' . Carbon::parse($time['timeTo'])->format('H:i');
+                }
+
+                if ($time['weekDay'] === 6) {
+                    $mapped['saturday'] = Carbon::parse($time['timeFrom'])->format('H:i') . '-' . Carbon::parse($time['timeTo'])->format('H:i');
+                }
+
+                if ($time['weekDay'] === 7) {
+                    $mapped['sunday'] = Carbon::parse($time['timeFrom'])->format('H:i') . '-' . Carbon::parse($time['timeTo'])->format('H:i');
+                }
+            }
 
             array_push($mappedLocations, $mapped);
 

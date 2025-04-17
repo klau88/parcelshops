@@ -3,6 +3,7 @@
 namespace App\Classes\Carriers;
 
 use App\Models\Parcelshop;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -52,7 +53,42 @@ class Homerr implements Carrier
                 'telephone' => null,
                 'latitude' => $location['latitude'],
                 'longitude' => $location['longitude'],
+                'monday' => null,
+                'tuesday' => null,
+                'wednesday' => null,
+                'thursday' => null,
+                'friday' => null,
+                'saturday' => null,
+                'sunday' => null,
             ];
+
+            if ($location['mon_from'] && $location['mon_to']) {
+                $mapped['monday'] = Carbon::parse($location['mon_from'])->format('H:i') . '-' . Carbon::parse($location['mon_to'])->format('H:i');
+            }
+
+            if ($location['tue_from'] && $location['tue_to']) {
+                $mapped['tuesday'] = Carbon::parse($location['tue_from'])->format('H:i') . '-' . Carbon::parse($location['tue_to'])->format('H:i');
+            }
+
+            if ($location['wed_from'] && $location['wed_to']) {
+                $mapped['wednesday'] = Carbon::parse($location['wed_from'])->format('H:i') . '-' . Carbon::parse($location['wed_to'])->format('H:i');
+            }
+
+            if ($location['thu_from'] && $location['thu_to']) {
+                $mapped['thursday'] = Carbon::parse($location['thu_from'])->format('H:i') . '-' . Carbon::parse($location['thu_to'])->format('H:i');
+            }
+
+            if ($location['fri_from'] && $location['fri_to']) {
+                $mapped['friday'] = Carbon::parse($location['fri_from'])->format('H:i') . '-' . Carbon::parse($location['fri_to'])->format('H:i');
+            }
+
+            if ($location['sat_from'] && $location['sat_to']) {
+                $mapped['saturday'] = Carbon::parse($location['sat_from'])->format('H:i') . '-' . Carbon::parse($location['sat_to'])->format('H:i');
+            }
+
+            if ($location['sun_from'] && $location['sun_to']) {
+                $mapped['sunday'] = Carbon::parse($location['sun_from'])->format('H:i') . '-' . Carbon::parse($location['sun_to'])->format('H:i');
+            }
 
             array_push($mappedLocations, $mapped);
 
