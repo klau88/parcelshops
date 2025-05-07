@@ -40,28 +40,41 @@ const getAddressFromLatLng = async (latitude, longitude) => {
 
 const closedMessage = 'closed';
 
+const weekdayView = (weekday, message) => {
+    return `
+        <div class="flex justify-between">
+            <div>
+                ${weekday}
+            </div>
+            <div class="ml-2">
+                ${message ?? closedMessage}
+            </div>
+        </div>
+    `;
+};
+
 const locationView = location => {
     return `
         <div>
             <h3 class="text-sm font-bold">${location.name}</h3>
             <div>
-                <p>
-                ${location.street} ${location.number}
-                </p>
-                <p>
-                ${location.postal_code} ${location.city}
-                </p>
-                <p>
-                <ul>
-                    <li v-if="location.monday">Monday: ${location.monday ?? closedMessage}</li>
-                    <li v-if="location.tuesday">Tuesday: ${location.tuesday ?? closedMessage}</li>
-                    <li v-if="location.wednesday">Wednesday: ${location.wednesday ?? closedMessage}</li>
-                    <li v-if="location.thursday">Thursday: ${location.thursday ?? closedMessage}</li>
-                    <li v-if="location.friday">Friday: ${location.friday ?? closedMessage}</li>
-                    <li v-if="location.saturday">Saturday: ${location.saturday ?? closedMessage}</li>
-                    <li v-if="location.sunday">Sunday: ${location.sunday ?? closedMessage}</li>
-                </ul>
-                </p>
+                <div class="my-3 flex flex-col justify-between">
+                    <div>
+                        ${location.street} ${location.number}
+                    </div>
+                    <div>
+                        ${location.postal_code} ${location.city}
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    ${weekdayView('Monday', location.monday)}
+                    ${weekdayView('Tuesday', location.tuesday)}
+                    ${weekdayView('Wednesday', location.wednesday)}
+                    ${weekdayView('Thursday', location.thursday)}
+                    ${weekdayView('Friday', location.friday)}
+                    ${weekdayView('Saturday', location.saturday)}
+                    ${weekdayView('Sunday', location.sunday)}
+                </div>
             </div>
         </div>
     `;
