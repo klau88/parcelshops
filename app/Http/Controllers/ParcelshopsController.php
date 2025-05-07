@@ -90,7 +90,7 @@ class ParcelshopsController extends Controller
             'latitude' => floatval(request()->latitude ?? config('app.default_lat')),
             'longitude' => floatval(request()->longitude ?? config('app.default_lng')),
             'postal' => request()->postal ?? config('app.default_postal'),
-            'number' => intval(request()->number ?? config('app.default_number')),
+            'number' => request()->number ?? config('app.default_number'),
             'country' => request()->country ?? config('app.default_country') ?? 'NL',
             'countries' => $countries,
             'selectedCarrier' => request()->carrier ?? null,

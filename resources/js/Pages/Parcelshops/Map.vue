@@ -16,11 +16,17 @@ const props = defineProps({
     latitude: Number,
     longitude: Number,
     postal: String,
-    number: Number,
+    number: String,
     country: String,
     countries: Array,
     selectedCarrier: String
 });
+
+let latitude = ref(props.latitude);
+let longitude = ref(props.longitude);
+let postal = ref(props.postal);
+let number = ref(props.number);
+let country = ref(props.country);
 
 const getAddressFromLatLng = async (latitude, longitude) => {
     const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
@@ -31,9 +37,9 @@ const getAddressFromLatLng = async (latitude, longitude) => {
         },
     });
 
-    props.postal = response.data.address.postcode;
-    props.number = response.data.address.house_number;
-    props.country = response.data.address.country_code.toUpperCase();
+    postal.value = response.data.address.postcode;
+    number.value = response.data.address.house_number;
+    country.value = response.data.address.country_code.toUpperCase();
 
     return response.data.address;
 }
@@ -122,16 +128,16 @@ onMounted(() => {
     }).addTo(map.value).bindPopup(`<p>${props.latitude} ${props.longitude}</p>`);
 
     marker.on('dragend', event => {
-        props.latitude = event.target._latlng.lat;
-        props.longitude = event.target._latlng.lng;
-        getAddressFromLatLng(event.target._latlng.lat, event.target._latlng.lng);
+        latitude.value = event.target._latlng.lat;
+        longitude.value = event.target._latlng.lng;
+        getAddressFromLatLng(latitude.value, longitude.value);
     });
 
     map.value.on('click', event => {
-        props.latitude = event.latlng.lat;
-        props.longitude = event.latlng.lng;
-        marker.setLatLng([event.latlng.lat, event.latlng.lng]).update();
-        getAddressFromLatLng(props.latitude, props.longitude);
+        latitude.value = event.latlng.lat;
+        longitude.value = event.latlng.lng;
+        marker.setLatLng([latitude.value, longitude.value]).update();
+        getAddressFromLatLng(latitude.value, longitude.value);
     });
 
     for (const location of props.locations) {
@@ -144,11 +150,11 @@ onMounted(() => {
     <div class="flex w-full">
         <FormBar
             :carriers="props.carriers"
-            :latitude="props.latitude"
-            :longitude="props.longitude"
-            :postal="props.postal"
-            :number="props.number"
-            :country="props.country"
+            :latitude="latitude"
+            :longitude="longitude"
+            :postal="postal"
+            :number="number"
+            :country="country"
             :countries="props.countries"
             :carrier="props.selectedCarrier"
             @updateLocations="updateLocations"

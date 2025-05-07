@@ -5,19 +5,24 @@ import InputLabel from "@/Components/InputLabel.vue";
 import SelectOption from "@/Components/SelectOption.vue";
 import {router} from "@inertiajs/vue3";
 import NumberInput from "@/Components/NumberInput.vue";
+import {ref} from "vue";
 
 const props = defineProps({
     carriers: Array,
     latitude: Number,
     longitude: Number,
     postal: String,
-    number: Number,
+    number: String,
     country: String,
     carrier: String,
     countries: Array
 });
 
-const emit = defineEmits('updateLocations');
+const carrier = ref(props.carrier);
+
+const emit = defineEmits({
+    updateLocations: 'updateLocations'
+});
 
 const getAddress = async data => {
 
@@ -36,7 +41,7 @@ const clicked = () => {
         longitude: props.longitude,
         postal: props.postal,
         number: props.number,
-        carrier: props.carrier
+        carrier: carrier.value
     };
 
     getAddress(data);
@@ -67,11 +72,11 @@ const clicked = () => {
         </div>
         <div class="m-2 flex flex-col">
             <InputLabel value="Number"/>
-            <NumberInput v-model="props.number"/>
+            <TextInput v-model="props.number"/>
         </div>
         <div class="m-2 flex flex-col">
             <InputLabel value="Carrier"/>
-            <SelectOption v-model="props.carrier" placeholder="Select a carrier..." :options="props.carriers"/>
+            <SelectOption v-model="carrier" placeholder="Select a carrier..." :options="props.carriers"/>
         </div>
         <div class="m-2">
             <PrimaryButton @click.prevent="clicked" class="p-2 w-full justify-center">
