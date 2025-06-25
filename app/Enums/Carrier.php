@@ -9,5 +9,5 @@ enum Carrier : string
     case DPD = 'DPD';
     case GLS = 'GLS';
     case Intrapost = 'Intrapost';
-    case Homerr = 'Homerr';
+//    case Homerr = 'Homerr';
 }
