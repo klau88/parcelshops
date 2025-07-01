@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Classes\Carriers\DHL;
-use App\Classes\Carriers\DPD;
-use App\Classes\Carriers\GLS;
-use App\Classes\Carriers\Homerr;
-use App\Classes\Carriers\Intrapost;
-use App\Classes\Carriers\PostNL;
 use App\Enums\Carrier;
+use App\Services\Carriers\DHL;
+use App\Services\Carriers\DPD;
+use App\Services\Carriers\GLS;
+use App\Services\Carriers\Homerr;
+use App\Services\Carriers\Intrapost;
+use App\Services\Carriers\PostNL;
 use Illuminate\Support\Facades\Vite;
 
 class LocationService

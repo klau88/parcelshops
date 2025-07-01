@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes\Carriers;
+namespace App\Services\Carriers;
 
 use App\Models\Parcelshop;
 use Carbon\Carbon;
