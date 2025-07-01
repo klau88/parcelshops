@@ -4,12 +4,19 @@ namespace App\Services\Carriers;
 
 use App\Models\Parcelshop;
 use Carbon\Carbon;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class Homerr implements Carrier
 {
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var string
+     */
     private $url = 'https://homerr-functions-production.azurewebsites.net/api';
 
     public function __construct()
@@ -17,16 +24,26 @@ class Homerr implements Carrier
         $this->name = 'Homerr';
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function authenticate()
+    /**
+     * @return PendingRequest
+     */
+    public function authenticate(): PendingRequest
     {
         // TODO: Implement authenticate() method.
     }
 
+    /**
+     * @param array $data
+     * @return array
+     */
     public function locations(array $data): array
     {
         $locations = Http::get($this->url . '/v1/homerrs/dropoff', [

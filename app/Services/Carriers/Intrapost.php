@@ -3,12 +3,19 @@
 namespace App\Services\Carriers;
 
 use App\Models\Parcelshop;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class Intrapost implements Carrier
 {
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var string
+     */
     private $url = 'https://api.intrapost.nl';
 
     public function __construct()
@@ -16,12 +23,18 @@ class Intrapost implements Carrier
         $this->name = 'Intrapost';
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function authenticate()
+    /**
+     * @return PendingRequest
+     */
+    public function authenticate(): PendingRequest
     {
         return [
             'ApiKey' => config('carriers.intrapost.apiKey'),
@@ -29,6 +42,10 @@ class Intrapost implements Carrier
         ];
     }
 
+    /**
+     * @param array $data
+     * @return array
+     */
     public function locations(array $data): array
     {
         $parameters = [
@@ -66,7 +83,7 @@ class Intrapost implements Carrier
                 'sunday' => null,
             ];
 
-            foreach($location['OpeningHours'] as $time) {
+            foreach ($location['OpeningHours'] as $time) {
                 $day = strtolower($time['Day']) ?? null;
 
                 $mapped[$day] = $time['Time'];

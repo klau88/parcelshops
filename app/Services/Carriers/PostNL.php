@@ -3,12 +3,19 @@
 namespace App\Services\Carriers;
 
 use App\Models\Parcelshop;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class PostNL implements Carrier
 {
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var string
+     */
     private $url = 'https://api.postnl.nl';
 
     public function __construct()
@@ -16,12 +23,18 @@ class PostNL implements Carrier
         $this->name = 'PostNL';
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function authenticate()
+    /**
+     * @return PendingRequest
+     */
+    public function authenticate(): PendingRequest
     {
         return Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -29,6 +42,11 @@ class PostNL implements Carrier
         ]);
     }
 
+    /**
+     * @param array $data
+     * @return array
+     * @throws \Illuminate\Http\Client\ConnectionException
+     */
     public function locations(array $data): array
     {
         $locations = $this->authenticate()->get($this->url . '/shipment/v2_1/locations/nearest', [

@@ -4,6 +4,7 @@ namespace App\Services\Carriers;
 
 use App\Models\Parcelshop;
 use Carbon\Carbon;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Str;
 use SoapClient;
 use SoapHeader;
@@ -19,12 +20,19 @@ class DPD implements Carrier
         $this->name = 'DPD';
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function authenticate()
+    /**
+     * @return PendingRequest
+     * @throws \SoapFault
+     */
+    public function authenticate(): PendingRequest
     {
         $authClient = new SoapClient($this->url . '/LoginServiceV21.wsdl', [
             'stream_context' => stream_context_create([
@@ -45,6 +53,11 @@ class DPD implements Carrier
         return $authClient->getAuth($authData);
     }
 
+    /**
+     * @param array $data
+     * @return array
+     * @throws \SoapFault
+     */
     public function locations(array $data): array
     {
         $parcelshopClient = new SoapClient($this->url . '/ParcelShopFinderServiceV50.wsdl', [

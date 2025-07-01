@@ -4,12 +4,19 @@ namespace App\Services\Carriers;
 
 use App\Models\Parcelshop;
 use Carbon\Carbon;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class DHL implements Carrier
 {
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var string
+     */
     private $url = 'https://api-gw.dhlparcel.nl';
 
     public function __construct()
@@ -17,12 +24,18 @@ class DHL implements Carrier
         $this->name = 'DHL';
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function authenticate()
+    /**
+     * @return PendingRequest
+     */
+    public function authenticate(): PendingRequest
     {
         return Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -31,6 +44,11 @@ class DHL implements Carrier
         ]);
     }
 
+    /**
+     * @param array $data
+     * @return array
+     * @throws \Illuminate\Http\Client\ConnectionException
+     */
     public function locations(array $data): array
     {
         $locations = $this->authenticate()
