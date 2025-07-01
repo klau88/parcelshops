@@ -40,18 +40,11 @@ class CreateServiceCommand extends Command
             File::makeDirectory($folder, 0755, true);
         }
 
-        $stub = <<<PHP
-            <?php
+        $stubPath = resource_path('stubs/service.stub');
+        $stub = File::get($stubPath);
 
-            namespace App\Services;
-
-            class {$className}
-            {
-                //
-            }
-
-        PHP;
-                File::put($path, $stub);
+        $stub = str_replace('{{className}}', $className, $stub);
+        File::put($path, $stub);
 
         $this->info("Service {$name} created successfully!");
         return Command::SUCCESS;
