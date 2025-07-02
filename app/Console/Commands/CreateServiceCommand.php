@@ -19,7 +19,7 @@ class CreateServiceCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Create a service class in App\Services';
+    protected $description = 'Create a new service class';
 
     /**
      * Execute the console command.
